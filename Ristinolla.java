@@ -14,6 +14,10 @@ public class Ristinolla {
     private File tallennus = new File("tallennus.txt");
     private String jatketaankoTallennuksesta;
     public void pelaa() {
+
+        /**
+         * Mikäli tallennuksessa oli keskeneräinen peli (kierros != 1), annetaan mahdollisuus jatkaa peliä. Kyllä = peli jatkuu normaalisti. Ei = Aloitetaan uusi.
+         */
         if (pelilauta.annaKierros() != 1) {
             System.out.println("Haluatko jatkaa tallennettua peliä? (Syötä K/E):");
             jatketaankoTallennuksesta = syote.nextLine();
@@ -30,6 +34,10 @@ public class Ristinolla {
                 pelilauta.nollaaPelitilanne();
             }
         }
+
+        /**
+         * Jos pelaajamäärää ei asetettu, kysytään ihmispelaajien määrää. 1 = Pelaaja 2 on tietokonepelaaja. 2 = Pelaaja 2 on toinen ihmispelaaja.
+         */
         while (pelilauta.annapelaajaMaara() != 1 && pelilauta.annapelaajaMaara() != 2) {
             try {
                 System.out.println("Syötä ihmispelaajien määrä (1/2)");
@@ -48,6 +56,10 @@ public class Ristinolla {
                 Pelaaja2 = new ihmisPelaaja();
             }
         }
+
+        /**
+         * Kunnes peli ei ole päättynyt, pelaajat pelaavat vuorotellen meneillään olevan kierroksen(vuoron) perusteella. Tallennetaan peli joka vuoron jälkeen.
+         */
         while (pelilauta.peliLoppu() == false) {
             if (pelilauta.annaKierros() %2 == 1) {
                 Pelaaja1.Pelaa(pelilauta);
@@ -68,6 +80,10 @@ public class Ristinolla {
                 }    
             }
         }
+
+        /**
+         * Pelin loputtua tulostetaan lauta, julistetaan lopputulos, ja nollataan pelitilanne sekä keskeneräisen pelin tallennukset. Suljetaan scannerit.
+         */
         pelilauta.tulostaLauta();
         pelilauta.julistaLopputulos();
         pelilauta.nollaaPelitilanne();
@@ -80,11 +96,20 @@ public class Ristinolla {
         Pelaaja1.suljeScanner();
         Pelaaja2.suljeScanner();
     }
+
+    /**
+     * Kirjoitetaan pelitilanne-merkkijono tallennus.txt-tiedostoon.
+     */
     public void tallenna() throws IOException {
         FileWriter tallentaja = new FileWriter(tallennus);
         tallentaja.write(pelilauta.annaPelitilanne());
         tallentaja.close();
     }
+
+    /**
+     * Ladataan peli, eli luetaan tallennus.txt-tiedosto ja luodaan sen perusteella pelilauta, asetetaan pelaajamäärä, pelaajamäärän perusteella luodaan pelaajat,
+     * asetetaan meneillään oleva kierros oikeaksi, ja selvitetään pelatut ruudut taulukkoon, jotta saadaan pelaajilta sopivat syötteet.
+     */
     public void lataa() throws IOException {
         Path tallennusPolku = tallennus.toPath();
         List<String> luku = Files.readAllLines(tallennusPolku);

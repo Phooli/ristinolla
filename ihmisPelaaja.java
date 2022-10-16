@@ -4,6 +4,12 @@ public class ihmisPelaaja extends Pelaaja{
     private boolean syoteSallittu;
     private Scanner peliRuutuSyote = new Scanner(System.in);
 
+    /**
+     * Tulostetaan pelilauta.
+     * Tarkistetaan ihmispelaajien määrä, kysytään meneillään olevan vuoron perusteella oikealta pelaajalta ruudun numeroa. 
+     * Varmistetaan, että numero vastaa ruutua, että ruutu ei ole täytetty, ja että ylipäätään syötetään numero. 
+     * Asetetaan pelaajan merkki ja päivitetään pelitilanne.
+     */
     public void Pelaa(Pelilauta pelilauta) {
         syoteSallittu = false;
         pelilauta.tulostaLauta();

@@ -2,10 +2,23 @@ import java.util.ArrayList;
 
 public class Pelilauta {
     private char[][] lauta; 
+
+    /**
+     * Kierros = jokainen pelattava vuoro, max 9.
+     */
     private int kierros = 1;
     private int pelaajaMaara;
+
+    /**
+     * Esittää pelitilanteen csv-muodossa: Ensin ruudut 1-9 (joko ruudun numero tai asetettu merkki), sitten ihmispelaajien määrä, ja meneillään olevan vuoron numero.
+     */
     private StringBuilder pelitilanne;
+
+    /**
+     * Pelatut ruudut taulukossa, jotta pelaajilta saataisiin syöte vapaana olevasta ruudusta. 
+     */
     private ArrayList<Integer> pelatutRuudut = new ArrayList<>();
+
     public Pelilauta(char a, char b, char c, char d, char e, char f, char g, char h, char i) {
         lauta = new char[3][3];
         lauta[0][0] = a; 
@@ -18,15 +31,21 @@ public class Pelilauta {
         lauta[2][1] = h;
         lauta[2][2] = i;
     }
+
     public int annapelaajaMaara() {
         return pelaajaMaara;
     }
+
     public void asetaPelaajaMaara(int pelaajaMaara) {
         this.pelaajaMaara = pelaajaMaara;
     }
     public String annaPelitilanne() {
         return pelitilanne.toString();
     }
+
+    /**
+     * Palauttaa tämänhetkisen pelitilanteen merkkijonona.
+     */
     public String paivitaPelitilanne() {
         pelitilanne = new StringBuilder();
         pelitilanne.append(lauta[0][0]);
@@ -52,6 +71,10 @@ public class Pelilauta {
         pelitilanne.append(Integer.toString(kierros).charAt(0));
         return pelitilanne.toString();
     }
+
+    /**
+     * Palauttaa pelitilanteen lähtöasetelmiin, jossa ei asetettua pelaajamäärää ja kierros 1. 
+     */
     public void nollaaPelitilanne() {
         pelitilanne = new StringBuilder();
         pelitilanne.append("1,2,3,4,5,6,7,8,9,0,1");
@@ -74,6 +97,10 @@ public class Pelilauta {
     public void asetaKierros(int kierros) {
         this.kierros = kierros;
     }
+
+    /**
+     * Tarkistaa jokaisen ruudun asetetun merkin varalta, ja lisää tällöin ruudun pelattujen ruutujen taulukkoon.
+     */
     public void selvitaPelatutRuudut() {
         if (lauta[0][0] != '1') {
             pelatutRuudut.add(1);
@@ -106,6 +133,10 @@ public class Pelilauta {
     public ArrayList<Integer> annaPelatutRuudut() {
         return pelatutRuudut;
     }
+
+    /**
+     * Tulostaa yksinkertaisen ristinolla-laudan komentoriville senhetkisen pelitilanteen mukaisesti. 
+     */
     public void tulostaLauta() {
         System.out.println("");
         System.out.println(lauta[0][0] + "|" + lauta[0][1] + "|" + lauta[0][2]);
@@ -115,6 +146,12 @@ public class Pelilauta {
         System.out.println(lauta[2][0] + "|" + lauta[2][1] + "|" + lauta[2][2]);
         System.out.println("");
     }
+
+    /**
+     * Asetetaan oikea merkki kierroksen perusteella (pariton = X, parillinen = O) pelaajan antamaa lukua vastaavaan ruutuun.
+     * Lisätään pelattu ruutu pelattujen ruutujen taulukkoon.
+     * Kasvatetaan kierroksen lukua yhdellä.
+     */
     public void asetaMerkki(int numero) {
         char merkki;
         if (kierros %2 == 1) {
@@ -153,6 +190,10 @@ public class Pelilauta {
         pelatutRuudut.add(numero);
         kierros++;
     }
+
+    /**
+     * Tulostetaan pelin lopputulos. Voiton tapauksessa voittaja selviää pelaajien määrän ja kierroksen avulla. Jos voittoa ei ole, julistetaan tasapeli.
+     */
     public void julistaLopputulos() {
         if (onkoVoitto() == true) {
             if (pelaajaMaara == 2) {
@@ -176,12 +217,21 @@ public class Pelilauta {
             System.out.println("Tasapeli!");
         }
     }
+
+    /**
+     * Palauttaa booleanin siitä, onko peli loppu. Voiton puuttuessa ja ruudukossa ollessa tilaa peli ei ole loppu.
+     * @return
+     */
     public boolean peliLoppu() {
         if (onkoVoitto() == false && onkoTaynna() == false) {
             return false;
         }
         return true;
     }
+
+    /**
+     * Palautetaan boolean voitosta brute force -selvityksen perusteella siitä, että onko pelilaudalla sääntöjen mukaisesti kolmen merkin yhdistelmä.
+     */
     private boolean onkoVoitto() {
         if (lauta[0][0] == lauta[0][1] && lauta[0][0] == lauta[0][2]) {
             return true;
@@ -209,6 +259,10 @@ public class Pelilauta {
         }
         return false;
     }
+
+    /**
+     * Palautetaan boolean siitä, onko laudalla tilaa. Tarkistetaan ruutuja, kunnes jossain ruudussa ei ole merkkiä. Jos kaikissa ruuduissa merkki, lauta on täynnä.
+     */
     private boolean onkoTaynna() {
         if (lauta[0][0] != 'O' && lauta[0][0] != 'X') {
             return false;
